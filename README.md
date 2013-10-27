@@ -8,6 +8,11 @@
 - replace the entire DOM with that node
 - zooming out: detect if zooming out to 100% and replace the dom with the element's parent
 
+###Strategies
+- intercept multitouch zoom events, translate them to css transforms that increase element sizes.  trigger transformation to zoomed-in version when reaching size threshold.
+  - replacing native gestures will probably not be smooth
+- allow actual zooming, and replace parent with child when zoomed in enough
+
 ###Notes
 
 Much of this is from notes about pixels at http://www.quirksmode.org/presentations/Spring2012/mobeers.pdf
@@ -30,3 +35,11 @@ Much of this is from notes about pixels at http://www.quirksmode.org/presentatio
 
 - "width" media query is the LAYOUT viewport.
 - meta viewport: \<meta name="viewport" content="width=device-width"\> sets the size of the LAYOUT viewport ("device-width", which is usually what you want, or pixel value).  Setting layout to become device width now makes the "width" media query useful for triggering changes on device width.
+
+###Resources
+- http://www.quirksmode.org/presentations/Spring2012/mobeers.pdf
+- https://thenewcircle.com/s/post/1141/a_pixel_is_not_a_pixel_ppk_explains_viewports
+- js library for zooming in to DOM elements: http://jaukia.github.io/zoomooz/
+  - smoothly increases size of elements with CSS transform.  Probably better for destktop rather than touchscreen. 
+- http://en.wikipedia.org/wiki/Zooming_user_interface
+  - general ZUI notes
