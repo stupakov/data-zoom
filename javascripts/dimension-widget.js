@@ -48,15 +48,3 @@ var updateValues = function() {
   displayValues($(".scrolling-offset"), scrollingOffset());
   displayValues($(".zoom-level"), zoomLevel());
 };
-
-$(function() {
-  updateValues();
-
-  $(window).resize(function () {
-   updateValues();
-  });
-
-  $(window).scroll(function () {
-   updateValues();
-  });
-});

@@ -1,9 +1,12 @@
 ###TODO
 
-- hardcoded divs with css for hiding/showing based on zoom
-- js script
-- hierarchical data sample (full and summary)
-- make js widget that displays zoom level and width of visual viewport
+- [DONE] - hardcoded divs with css for hiding/showing based on zoom
+- [DONE] - js script
+- [DONE] - hierarchical data sample (full and summary)
+- [DONE] - make js widget that displays zoom level and width of visual viewport
+- detect if an element takes up the entire viewport
+- replace the entire DOM with that node
+- zooming out: detect if zooming out to 100% and replace the dom with the element's parent
 
 ###Notes
 
