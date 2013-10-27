@@ -29,6 +29,13 @@ var scrollingOffset = function() {
   }
 };
 
+var zoomLevel = function() {
+  return {
+    x: layoutDimensions().x / viewportDimensions().x,
+    y: layoutDimensions().y / viewportDimensions().y
+  }
+};
+
 var displayValues = function($el, data) {
   $el.find(".x-value").html(data.x);
   $el.find(".y-value").html(data.y);
@@ -39,6 +46,7 @@ var updateValues = function() {
   displayValues($(".layout-dimensions"), layoutDimensions());
   displayValues($(".viewport-dimensions"), viewportDimensions());
   displayValues($(".scrolling-offset"), scrollingOffset());
+  displayValues($(".zoom-level"), zoomLevel());
 };
 
 $(function() {
