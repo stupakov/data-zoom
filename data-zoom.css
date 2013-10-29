@@ -1,5 +1,8 @@
 body {
   font-family: Sans-Serif;
+  width: 800px;
+  height: 640px;
+  margin: 0;
 }
 
 h1, ul, li {
@@ -29,9 +32,36 @@ h1, ul, li {
 
 /*layout*/
 
-.node {
+.node-container {
   border: 1px solid #faa;
   background-color: #fcc;
-  width: 200px;
-  padding: 10px;
+  -webkit-transition: all .2s ease-in-out;
+  box-sizing: border-box;
 }
+
+.node-container {
+  width: 200px;
+  height: 100px;
+}
+.node-container .node-full {
+  width: 400px;
+  height: 200px;
+  border: 1px solid green;
+  box-sizing: border-box;
+  -webkit-transform: scale(0.5) translate(-25%, -25%);
+}
+
+.node-container.summary .node-summary {
+  display: block;
+}
+.node-container.summary .node-full {
+  display: none;
+}
+
+.node-container.full .node-summary {
+  display: none;
+}
+.node-container.full .node-full {
+  display: block;
+}
+
