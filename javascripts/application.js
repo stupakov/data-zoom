@@ -37,15 +37,18 @@ $(function() {
 
     var containerCenter = getElementCenter($container);
     var elementCenter = getElementCenter(event.currentTarget);
+    var translationDistance = computeDistance(elementCenter, containerCenter);
 
-    /*$container.css('transform-origin', mousePosition.x + ' ' + mousePosition.y);*/
-    /*$container.css('transform-origin', (elementCenter.x / zoomScale) + ' ' + (elementCenter.y / zoomScale));*/
-    $container.css('transform-origin', '50% 50%');
 
+    // zet zoom transform origin to center of element
+    $container.css('transform-origin', (elementCenter.x) + 'px ' + (elementCenter.y) + 'px');
+
+    // move center of element to center of container
     $container.animate({
-      transform: '+=scale(' + zoomScale + ')'
+      transform: '+=scale(' + zoomScale + ')' +
+      'translate(' + translationDistance.x/zoomScale + 'px, ' + translationDistance.y/zoomScale + 'px)'
     });
-      
+
     event.stopPropagation();
     setTimeout(function() {
       render();
@@ -63,7 +66,14 @@ $(function() {
 
     return {
       x: centerX,
-        y: centerY
+      y: centerY
     };
-  };  
+  };
+
+  var computeDistance = function(point1, point2) {
+    return { 
+      x: point2.x - point1.x,
+      y: point2.y - point1.y
+    }  
+  }
 });
