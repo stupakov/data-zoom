@@ -1,8 +1,14 @@
 body {
   font-family: Sans-Serif;
+  margin: 0;
   width: 800px;
   height: 640px;
-  margin: 0;
+}
+
+.container {
+  width: 800px;
+  height: 640px;
+  border: 1px dashed #ccc;
 }
 
 h1, ul, li {
@@ -33,6 +39,7 @@ h1, ul, li {
 /*layout*/
 
 .node-container {
+  margin: 200px auto;
   border: 1px solid #faa;
   background-color: #fcc;
   -webkit-transition: all .2s ease-in-out;
@@ -48,7 +55,7 @@ h1, ul, li {
   height: 200px;
   border: 1px solid green;
   box-sizing: border-box;
-  -webkit-transform: scale(0.5) translate(-25%, -25%);
+  -webkit-transform: scale(0.5);
 }
 
 .node-container.summary .node-summary {

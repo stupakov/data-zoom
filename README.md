@@ -13,7 +13,9 @@
 - replace the entire DOM with that node
 - zooming out: detect if zooming out to 100% and replace the dom with the element's parent
 - scale up the focused element more quickly than its parent, and scale down its siblings
- 
+- look into map rendering engines
+
+   
 
 ###Strategies
 - intercept multitouch zoom events, translate them to css transforms that increase element sizes.  trigger transformation to zoomed-in version when reaching size threshold.
