@@ -40,35 +40,54 @@ h1, ul, li {
 
 .node-container {
   margin: 200px auto;
-  border: 1px solid #faa;
+  border: 2px solid #faa;
   background-color: #fcc;
   -webkit-transition: all .2s ease-in-out;
-  box-sizing: border-box;
-}
-
-.node-container {
+  /*box-sizing: border-box;*/
   width: 200px;
   height: 100px;
+  overflow: hidden;
+}
+
+.node-container .node-summary {
+  display: block;
+  width: 200px;
+  height: 100px;
+  /*border: 3px solid orange;*/
+  box-sizing: border-box;
+  transition:visibility 0.5s ease, opacity 0.5s ease;
 }
 .node-container .node-full {
+  display: block;
   width: 400px;
   height: 200px;
-  border: 1px solid green;
+  /*border: 6px solid green;*/
   box-sizing: border-box;
   -webkit-transform: scale(0.5);
+  transition:visibility 0.5s ease, opacity 0.5s ease;
 }
 
 .node-container.summary .node-summary {
-  display: block;
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
 }
 .node-container.summary .node-full {
-  display: none;
+  visibility: hidden;
+  height: 0;
+  border: 0;
+  opacity: 0;
 }
 
 .node-container.full .node-summary {
-  display: none;
+  visibility: hidden;
+  height: 0;
+  border: 0;
+  opacity: 0;
 }
 .node-container.full .node-full {
-  display: block;
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
 }
 
