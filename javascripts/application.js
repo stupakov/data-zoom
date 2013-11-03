@@ -35,10 +35,8 @@ $(function() {
             y: event.clientY
         }
 
-    // NOTE: event target could be node container or its 
-    // child that was clicked
-    var elementCenter = getElementCenter(event.target);
-    console.log(elementCenter);
+    var containerCenter = getElementCenter($container);
+    var elementCenter = getElementCenter(event.currentTarget);
 
     /*$container.css('transform-origin', mousePosition.x + ' ' + mousePosition.y);*/
     /*$container.css('transform-origin', (elementCenter.x / zoomScale) + ' ' + (elementCenter.y / zoomScale));*/
