@@ -6,8 +6,12 @@
 - [DONE] - make js widget that displays zoom level and width of visual viewport
 - [DONE] - use css transform to zoom in on an element, and switch over to the full version of that element at a scale threshold.  full version's dimensions should be the scale threshold times the dimensions of the summary version
 - fix the translation to get positioning right
-- add controls to scale the body up and down
+- clean up application.js, share element definition between js files
+- get rid of zoomooz.js (figure out how it is translating the zoomed element and its chilren)
+- render after end of animation instead of timeout
 - add hooks to touch events to grab zoom and transform it into body scaling events
+- try 2 side by side zoomable elements
+- try nested zoomable elements
 - make good hierarchical sample data we can use (http://orteil.dashnet.org/nested)
 - detect if an element takes up the entire viewport
 - replace the entire DOM with that node

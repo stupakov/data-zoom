@@ -1,14 +1,24 @@
 body {
   font-family: Sans-Serif;
+  background-color: #218559;
+  background-image: url('images/washi.png');
+}
+
+.outer-container {
   margin: 0;
   width: 800px;
-  height: 640px;
+  height: 400px;
+  border: 2px solid black;
+  overflow: hidden;
+  background-color: #aca;
 }
 
 .container {
   width: 800px;
-  height: 640px;
-  border: 1px dashed #ccc;
+  height: 400px;
+  border: 2px solid red;
+  background-color: #99C6FF;
+  box-sizing: border-box;
 }
 
 h1, ul, li {
@@ -18,14 +28,14 @@ h1, ul, li {
 /*widget*/
 
 .dimension-data-widget {
-  opacity: 0.3;
+  opacity: 0.8;
   font-size: 10px;
   width: 140px; 
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background-color: #ffc;
-  border: 1px solid #ff5;
+  background-color: #FFFFB4;
+  border: 1px solid #EBB035;
 }
 
 .dimension-data-widget > div {
@@ -39,9 +49,9 @@ h1, ul, li {
 /*layout*/
 
 .node-container {
-  margin: 200px auto;
-  border: 2px solid #faa;
-  background-color: #fcc;
+  margin: 100px auto;
+  border: 2px solid #DD1E2F;
+  background-color: white;
   -webkit-transition: all .2s ease-in-out;
   /*box-sizing: border-box;*/
   width: 200px;
