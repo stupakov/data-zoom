@@ -22,10 +22,9 @@ $(function() {
   $container.click(function() {
     $container.animate({
       transform: 'scale(1)'
+    }, function() {
+      render()
     });
-    setTimeout(function() {
-      render();
-    }, 500);
   });
 
   $(".node-container").click(function(event) {
@@ -39,7 +38,6 @@ $(function() {
     var elementCenter = getElementCenter(event.currentTarget);
     var translationDistance = computeDistance(elementCenter, containerCenter);
 
-
     // zet zoom transform origin to center of element
     $container.css('transform-origin', (elementCenter.x) + 'px ' + (elementCenter.y) + 'px');
 
@@ -47,12 +45,11 @@ $(function() {
     $container.animate({
       transform: '+=scale(' + zoomScale + ')' +
       'translate(' + translationDistance.x/zoomScale + 'px, ' + translationDistance.y/zoomScale + 'px)'
+    }, function() { 
+      render() 
     });
 
     event.stopPropagation();
-    setTimeout(function() {
-      render();
-    }, 500);
   });
 
   var getElementCenter = function(element) {
