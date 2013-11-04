@@ -9,11 +9,12 @@
 - [DONE] get rid of zoomooz.js (figure out how it is translating the zoomed element and its chilren)
 - [DONE] render after end of animation instead of timeout
 - [DONE] clean up application.js, share element definition between js files
-- try 2 side by side zoomable elements
+- [DONE] try 2 side by side zoomable elementss
 - add hooks to touch events to grab zoom and transform it into body scaling events
 - add SASS (maybe rails + asset pipeline?)
-- allow (fix) zooming in twice?
 - try nested zoomable elements
+- allow (fix) zooming in twice?
+- only enhance the zoomed-in element?  all elements at same level in zoom hierarchy? all elements in viewport? in vicinity of viewport?
 - make good hierarchical sample data we can use (http://orteil.dashnet.org/nested)
 - detect if an element takes up the entire viewport
 - replace the entire DOM with that node
