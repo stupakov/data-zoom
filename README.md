@@ -7,10 +7,10 @@
 - [DONE] - use css transform to zoom in on an element, and switch over to the full version of that element at a scale threshold.  full version's dimensions should be the scale threshold times the dimensions of the summary version
 - [DONE] fix the translation to get positioning right
 - [DONE] get rid of zoomooz.js (figure out how it is translating the zoomed element and its chilren)
-- clean up application.js, share element definition between js files
-- render after end of animation instead of timeout
-- add hooks to touch events to grab zoom and transform it into body scaling events
+- [DONE] render after end of animation instead of timeout
+- [DONE] clean up application.js, share element definition between js files
 - try 2 side by side zoomable elements
+- add hooks to touch events to grab zoom and transform it into body scaling events
 - add SASS (maybe rails + asset pipeline?)
 - allow (fix) zooming in twice?
 - try nested zoomable elements
@@ -50,6 +50,9 @@ Much of this is from notes about pixels at http://www.quirksmode.org/presentatio
 
 - "width" media query is the LAYOUT viewport.
 - meta viewport: \<meta name="viewport" content="width=device-width"\> sets the size of the LAYOUT viewport ("device-width", which is usually what you want, or pixel value).  Setting layout to become device width now makes the "width" media query useful for triggering changes on device width.
+
+#### CSS transitions
+- use css classes instead of js for applying transforms if possible: http://blog.teamtreehouse.com/using-jquery-to-detect-when-css3-animations-and-transitions-end
 
 ###Resources
 - http://www.quirksmode.org/presentations/Spring2012/mobeers.pdf
