@@ -1,6 +1,6 @@
 var makeZoomable = function($element, $container) {
-  var $messenger = $({});
   var zoomScale = 2;
+  var $messenger = $({});
 
   var scaleLevel = function($element) {
     var matrix = $element.css("-webkit-transform");
@@ -25,10 +25,10 @@ var makeZoomable = function($element, $container) {
   };
 
   var computeDistance = function(point1, point2) {
-    return { 
+    return {
       x: point2.x - point1.x,
         y: point2.y - point1.y
-    }  
+    }
   };
 
   (function () {
@@ -43,6 +43,16 @@ var makeZoomable = function($element, $container) {
       }, function() {
         $messenger.trigger('render');
       });
+    });
+
+    $container.on('mousewheel', function(event, d, dx, dy) {
+      var newScale = scaleLevel($container) * (1 - dy/120);
+      if(newScale < 1) {
+        newScale = 1;
+      };
+      $container.css('transform', 'scale(' + newScale + ')');
+      event.preventDefault();
+      $messenger.trigger('render');
     });
 
     $messenger.on('render', function() {
@@ -72,7 +82,7 @@ var makeZoomable = function($element, $container) {
       $container.animate({
         transform: '+=scale(' + zoomScale + ')' +
                      'translate(' + translationDistance.x/zoomScale + 'px, ' + translationDistance.y/zoomScale + 'px)'
-                     }, function() { 
+                     }, function() {
                        $messenger.trigger('render');
                      });
 
