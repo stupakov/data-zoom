@@ -10,8 +10,9 @@
 - [DONE] render after end of animation instead of timeout
 - [DONE] clean up application.js, share element definition between js files
 - [DONE] try 2 side by side zoomable elementss
-- add hooks to touch events to grab zoom and transform it into body scaling events
+- [DONE] add hooks to touch events to grab zoom and transform it into body scaling events
 - add SASS (maybe rails + asset pipeline?)
+- disable scrolling and focus on clicking (simpler for now). isolate zoom functionality so that click/scroll zooming can be interchangeable later
 - try nested zoomable elements
 - allow (fix) zooming in twice?
 - only enhance the zoomed-in element?  all elements at same level in zoom hierarchy? all elements in viewport? in vicinity of viewport?
