@@ -1,7 +1,7 @@
 var initializeDimensionWidget = function() {
   // device dimensions in device pixels
   var deviceDimensions = function() {
-    return { 
+    return {
       x: screen.width,
         y: screen.height
     }
@@ -9,7 +9,7 @@ var initializeDimensionWidget = function() {
 
   //layout viewport dimensions in CSS pixels
   var layoutDimensions = function() {
-    return { 
+    return {
       x: document.documentElement.clientWidth,
         y: document.documentElement.clientHeight
     }
@@ -17,9 +17,9 @@ var initializeDimensionWidget = function() {
 
   // visual viewport dimensions in CSS pixels
   var viewportDimensions = function() {
-    return { 
+    return {
       x: window.innerWidth,
-        y: window.innerHeight 
+        y: window.innerHeight
     }
   };
 
@@ -50,11 +50,17 @@ var initializeDimensionWidget = function() {
     displayValues($(".zoom-level"), zoomLevel());
   };
 
-  (function() { 
+  var updateMousePosition = function(x,y) {
+    displayValues($(".mouse-position"), {x: x, y: y});
+  };
+
+  (function() {
     updateValues();
 
-    $(window).on('resize scroll', function () {
-      updateValues();
+    $(window).on('resize scroll', updateValues);
+
+    $(window).on('mousemove', function(e) {
+      updateMousePosition(e.pageX, e.pageY);
     });
   }());
 }
