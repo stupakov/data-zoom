@@ -12,6 +12,11 @@ body {
   background-image: url('../images/washi.png');
 }
 
+div, span {
+  /* border: 0px !important; */
+  /* box-sizing: border-box; */
+}
+
 .outer-container {
   margin: 0;
   width: 800px;
@@ -39,6 +44,13 @@ h1, ul, li {
   width: 3px;
   height: 3px;
   z-index: 10;
+
+  &:after {
+    width: 60px;
+    font-size: 10px;
+    background-color: #FBB;
+    content: attr(data-content)
+  }
 }
 
 /*widget*/
@@ -79,10 +91,19 @@ h1, ul, li {
   overflow: hidden;
 
   .node-dimensions {
-    font-size: 9px;
+    width: 120px;
+    position: relative;
+    bottom: 5px;
+    left: 5px;
+    border: 1px solid green;
+    background-color: #BFB;
+    font-size: 8px;
+    opacity: .4;
+    z-index: 20;
   }
 
   .center-link {
+    color: red;
     text-decoration: none;
     font-size: 9px;
   }

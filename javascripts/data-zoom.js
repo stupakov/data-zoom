@@ -1,10 +1,10 @@
 var makeZoomable = function($element, $container, $frame) {
 
+  // TODO: consider storing a reference to the node's container in the node
 
-
-
-  (Node = function(el) {
+  (Node = function(el, $positionDot) {
     this.$el = $(el);
+    this.$positionDot = $positionDot;
     this.initialize();
   }).prototype = {
     initialize: function() {
@@ -27,17 +27,49 @@ var makeZoomable = function($element, $container, $frame) {
       return this.$el.height();
     },
 
-    showDimensions: function() {
-      this.$el.find(".width-value").html(this.getWidth());
-      this.$el.find(".height-value").html(this.getHeight());
-      this.$el.find(".center-x-value").html(this.getCenter().x);
-      this.$el.find(".center-y-value").html(this.getCenter().y);
+    // TODO:
+    // containerScaleLevel is still global. Instead, an element should recursively figure
+    // out its scale by multiplying its own scale level by its parent's.
 
-      placeDot(this.$el.find(".position-dot"), this.getCenter(), "red");
+    getScaledWidth: function() {
+      return this.getWidth() * containerScaleLevel();
+    },
+
+    getScaledHeight: function() {
+      return this.getHeight() * containerScaleLevel();
+    },
+
+    getOffset: function() {
+      return this.$el.offset();
+    },
+
+    getCenter: function() {
+      var centerX = (this.getOffset().left + (this.getScaledWidth() / 2));
+      var centerY = (this.getOffset().top + (this.getScaledHeight() / 2));
+
+      return {
+        x: centerX,
+          y: centerY
+      };
+    },
+
+    showDimensions: function() {
+      this.$el.find(".width-value").html(this.getWidth().toFixed(1));
+      this.$el.find(".height-value").html(this.getHeight().toFixed(1));
+      this.$el.find(".scaled-width-value").html(this.getScaledWidth().toFixed(1));
+      this.$el.find(".scaled-height-value").html(this.getScaledHeight().toFixed(1));
+      this.$el.find(".center-x-value").html(this.getCenter().x.toFixed(1));
+      this.$el.find(".center-y-value").html(this.getCenter().y.toFixed(1));
+      this.$el.find(".left-value").html(this.getOffset().left.toFixed(1));
+      this.$el.find(".top-value").html(this.getOffset().top.toFixed(1));
+
+      if(undefined != this.$positionDot) {
+        placeDot(this.$positionDot, this.getCenter(), "red");
+      }
     },
 
     centerNode: function() {
-      console.log("CENTERING")
+      moveContainerToCenterElement(this.$el);
     }
   };
 
@@ -68,8 +100,13 @@ var makeZoomable = function($element, $container, $frame) {
     var width = $element.width();
     var height = $element.height();
 
-    var centerX = offset.left + width / 2;
-    var centerY = offset.top + height / 2;
+    var containerScale = containerScaleLevel();
+
+    var scaledWidth = width / containerScale;
+    var scaledHeight = height / containerScale;
+
+    var centerX = (offset.left + (width / 2));
+    var centerY = (offset.top + (height / 2));
 
     return {
       x: centerX,
@@ -86,6 +123,7 @@ var makeZoomable = function($element, $container, $frame) {
 
   var placeDot = function($el, coordinates, color) {
       $el.css('left', coordinates.x + "px").css('top', coordinates.y + "px").css('background-color', color);
+      $el.attr('data-content', "x: " + coordinates.x.toFixed(1) + ", y: " + coordinates.y.toFixed(1))
   };
 
   // grabs the current translation value from the css
@@ -111,12 +149,34 @@ var makeZoomable = function($element, $container, $frame) {
     };
   };
 
+  var moveContainerToCenterElement = function($el) {
+      var elementNode = new Node($el);
+
+      var containerCenter = getElementCenter($container);
+      var frameCenter = getElementCenter($frame);
+      var elementCenter = elementNode.getCenter();
+
+      var translationDistance = computeDistance(elementCenter, frameCenter);
+
+
+      // zet zoom transform origin to center of element
+      $container.css('transform-origin', (elementCenter.x) + 'px ' + (elementCenter.y) + 'px');
+
+      // move container so that element is centered in the frame
+      $container.animate({
+        transform: 'translate(' + translationDistance.x + 'px, ' + translationDistance.y + 'px)'
+      }, function() {
+        $messenger.trigger('render');
+      });
+  };
+
   (function setUpAllTheThings() {
     $container.css({
       transform: 'scale(1)'
     });
 
     // TODO: zoom out incrementally (but prevent scale < 1)
+    if(false) {
     $container.click(function() {
       $container.animate({
         transform: 'scale(1)'
@@ -124,6 +184,7 @@ var makeZoomable = function($element, $container, $frame) {
         $messenger.trigger('render');
       });
     });
+    }
 
     $container.on('mousewheel', function(event, d, dx, dy) {
       var newScale = containerScaleLevel() * (1 - dy/120);
@@ -156,6 +217,8 @@ var makeZoomable = function($element, $container, $frame) {
       var elementCenter = getElementCenter(event.currentTarget);
       var translationDistance = computeDistance(elementCenter, frameCenter);
 
+      // Zoom-plus-translate code; does not work.
+      if(false) {
       // zet zoom transform origin to center of element
       $container.css('transform-origin', (elementCenter.x) + 'px ' + (elementCenter.y) + 'px');
 
@@ -166,12 +229,14 @@ var makeZoomable = function($element, $container, $frame) {
       }, function() {
         $messenger.trigger('render');
       });
+      }
 
       event.stopPropagation();
     };
 
   $(".node-summary, .node-full").each(function(idx, el) {
-    var node = new Node(el);
+    var positionDotSelector = "#position-dot-" + idx;
+    var node = new Node(el, $(positionDotSelector));
   })
 
     // $element.click(doStuffWhenClicked);
