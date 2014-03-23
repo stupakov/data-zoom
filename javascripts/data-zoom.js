@@ -1,4 +1,48 @@
 var makeZoomable = function($element, $container, $frame) {
+
+
+
+
+  (Node = function(el) {
+    this.$el = $(el);
+    this.initialize();
+  }).prototype = {
+    initialize: function() {
+      this.$centerLink = this.$el.find(".center-link");
+      this.$el.click(this.showDimensions.bind(this));
+      this.$centerLink.click(this.centerNode.bind(this));
+      this.showDimensions();
+      $(window).on('mousewheel resize scroll', this.showDimensions.bind(this));
+    },
+
+    getCenter: function() {
+      return getElementCenter(this.$el);
+    },
+
+    getWidth: function() {
+      return this.$el.width();
+    },
+
+    getHeight: function() {
+      return this.$el.height();
+    },
+
+    showDimensions: function() {
+      this.$el.find(".width-value").html(this.getWidth());
+      this.$el.find(".height-value").html(this.getHeight());
+      this.$el.find(".center-x-value").html(this.getCenter().x);
+      this.$el.find(".center-y-value").html(this.getCenter().y);
+
+      placeDot(this.$el.find(".position-dot"), this.getCenter(), "red");
+    },
+
+    centerNode: function() {
+      console.log("CENTERING")
+    }
+  };
+
+
+
   var zoomScale = 2;
   var $messenger = $({});
 
@@ -40,8 +84,8 @@ var makeZoomable = function($element, $container, $frame) {
     }
   };
 
-  var placeDot = function(coordinates, color) {
-      $('.position-dot').css('left', coordinates.x + "px").css('top', coordinates.y + "px").css('background-color', color);
+  var placeDot = function($el, coordinates, color) {
+      $el.css('left', coordinates.x + "px").css('top', coordinates.y + "px").css('background-color', color);
   };
 
   // grabs the current translation value from the css
@@ -115,7 +159,7 @@ var makeZoomable = function($element, $container, $frame) {
       // zet zoom transform origin to center of element
       $container.css('transform-origin', (elementCenter.x) + 'px ' + (elementCenter.y) + 'px');
 
-      // move center of element to center of container
+      // move container so that element is centered in the frame
       $container.animate({
         transform: '+=scale(' + zoomScale + ')' +
           'translate(' + translationDistance.x/zoomScale + 'px, ' + translationDistance.y/zoomScale + 'px)'
@@ -126,7 +170,11 @@ var makeZoomable = function($element, $container, $frame) {
       event.stopPropagation();
     };
 
-    $element.click(doStuffWhenClicked);
+  $(".node-summary, .node-full").each(function(idx, el) {
+    var node = new Node(el);
+  })
+
+    // $element.click(doStuffWhenClicked);
   } ());
 };
 
