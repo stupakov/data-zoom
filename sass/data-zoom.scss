@@ -33,6 +33,14 @@ h1, ul, li {
   margin: 0;
 }
 
+.position-dot {
+  position: absolute;
+  background-color: red;
+  width: 3px;
+  height: 3px;
+  z-index: 10;
+}
+
 /*widget*/
 
 .dimension-data-widget {

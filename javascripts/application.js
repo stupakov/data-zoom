@@ -1,6 +1,6 @@
 $(function() {
 
   initializeDimensionWidget();
-  makeZoomable($(".node-container"), $('.container'));
+  makeZoomable($(".node-container"), $('.container'), $('.outer-container'));
 });
 

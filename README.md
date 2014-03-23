@@ -11,10 +11,10 @@
 - [DONE] clean up application.js, share element definition between js files
 - [DONE] try 2 side by side zoomable elementss
 - [DONE] add hooks to touch events to grab zoom and transform it into body scaling events
-- add SASS (maybe rails + asset pipeline?)
+- [DONE] add SASS
+- allow (fix) zooming in twice?
 - disable scrolling and focus on clicking (simpler for now). isolate zoom functionality so that click/scroll zooming can be interchangeable later
 - try nested zoomable elements
-- allow (fix) zooming in twice?
 - only enhance the zoomed-in element?  all elements at same level in zoom hierarchy? all elements in viewport? in vicinity of viewport?
 - make good hierarchical sample data we can use (http://orteil.dashnet.org/nested)
 - detect if an element takes up the entire viewport
