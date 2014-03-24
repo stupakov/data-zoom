@@ -9,7 +9,7 @@ var makeZoomable = function($element, $container, $frame) {
     this.initialize();
   }).prototype = {
     initialize: function() {
-      this.$centerLink = this.$el.find(".center-link");
+      this.$centerLink = this.$dimensionsWidget.find(".center-link");
       this.$el.click(this.showDimensions.bind(this));
       this.$centerLink.click(this.centerNode.bind(this));
       this.showDimensions();
@@ -69,22 +69,27 @@ var makeZoomable = function($element, $container, $frame) {
         this.$dimensionsWidget.find(".center-y-value").html(this.getCenter().y.toFixed(1));
         this.$dimensionsWidget.find(".left-value").html(this.getOffset().left.toFixed(1));
         this.$dimensionsWidget.find(".top-value").html(this.getOffset().top.toFixed(1));
+
+        if(this.$el.is(":visible")) {
+          this.$dimensionsWidget.show();
+        } else {
+          this.$dimensionsWidget.hide();
+        }
       }
       if(undefined != this.$positionDot) {
         placeDot(this.$positionDot, this.getCenter(), "red");
+
+        if(this.$el.is(":visible")) {
+          this.$positionDot.show();
+        } else {
+          this.$positionDot.hide();
+        }
       }
 
-      if(this.$el.is(":visible")) {
-        this.$positionDot.show();
-        this.$dimensionsWidget.show();
-      } else {
-        this.$positionDot.hide();
-        this.$dimensionsWidget.hide();
-      }
     },
 
     centerNode: function() {
-      moveContainerToCenterElement(this.$el);
+      moveNodeContainerToCenterElement(this);
     }
   };
 
@@ -98,10 +103,24 @@ var makeZoomable = function($element, $container, $frame) {
     return matrix.match(/-?[0-9\.]+/g);
   }
 
+  // assume that x and y scale are always the same
   var scaleLevel = function($element) {
     var values = elementMatrixValues($element);
     if (values == undefined) return 1;
     return values[0];
+  }
+
+  // assume that x and y scale are always the same
+  var setElementScaleLevel = function($element, scaleLevel) {
+    var values = elementMatrixValues($element);
+    if (values == undefined) {
+      $element.css('transform', 'scale(' + newScale + ')');
+    } else {
+      values[0] = scaleLevel; // x scale
+      values[3] = scaleLevel; // y scale
+      var newMatrixString = "matrix(" + values.join(", ") + ")"
+      $element.css("transform", newMatrixString);
+    }
   }
 
   var containerScaleLevel = function() {
@@ -163,18 +182,18 @@ var makeZoomable = function($element, $container, $frame) {
     };
   };
 
-  var moveContainerToCenterElement = function($el) {
-      var elementNode = new Node($el);
+  // TODO: does not work correctly yet.
+  var moveNodeContainerToCenterElement = function(node) {
+      var containerCenter = containerNode.getCenter();
+      var frameCenter = frameNode.getCenter();
+      var elementCenter = node.getCenter();
 
-      var containerCenter = getElementCenter($container);
-      var frameCenter = getElementCenter($frame);
-      var elementCenter = elementNode.getCenter();
+      console.log(containerCenter, frameCenter, elementCenter);
 
       var translationDistance = computeDistance(elementCenter, frameCenter);
 
-
       // zet zoom transform origin to center of element
-      $container.css('transform-origin', (elementCenter.x) + 'px ' + (elementCenter.y) + 'px');
+      //$container.css('transform-origin', (elementCenter.x) + 'px ' + (elementCenter.y) + 'px');
 
       // move container so that element is centered in the frame
       $container.animate({
@@ -183,6 +202,41 @@ var makeZoomable = function($element, $container, $frame) {
         $messenger.trigger('render');
       });
   };
+
+
+    var createWidgetsForNode = function(idx) {
+      $positionDotElement = $("<div>", {id: "position-dot-" + idx, class: "position-dot"});
+      $dimensionsWidgetElement = $("<div>", {id: "node-dimensions-" + idx, class: "node-dimensions"});
+
+      $dimensionsWidgetElement.html(' \
+                <div>width: <span class="width-value"></span>, scaled width:<span class="scaled-width-value"></span></div> \
+                <div>height: <span class="height-value"></span>, scaled height:<span class="scaled-height-value"></span></div> \
+                <div>center x: <span class="center-x-value"></span>, center y: <span class="center-y-value"></span></div> \
+                <div>left: <span class="left-value"></span>, top: <span class="top-value"></span></div> \
+                <a href="#" class="center-link">center</a> \
+      ');
+
+      return {
+        dot: $positionDotElement,
+        dimensions: $dimensionsWidgetElement
+      }
+    };
+
+
+    // TODO: move these back into setup function and make their nodes accessible:
+
+    // make widgets and node for frame
+    var widgets = createWidgetsForNode(0);
+    $("#position-dots").append(widgets.dot);
+    $("#dimensions-widgets").append(widgets.dimensions);
+    var frameNode = new Node($frame, widgets.dot, widgets.dimensions);
+
+    // make widgets and node for container
+    var widgets = createWidgetsForNode(0);
+    $("#position-dots").append(widgets.dot);
+    $("#dimensions-widgets").append(widgets.dimensions);
+    var containerNode = new Node($container, widgets.dot, widgets.dimensions);
+
 
   (function setUpAllTheThings() {
     $container.css({
@@ -200,12 +254,14 @@ var makeZoomable = function($element, $container, $frame) {
     });
     }
 
+
     $container.on('mousewheel', function(event, d, dx, dy) {
       var newScale = containerScaleLevel() * (1 - dy/120);
       if(newScale < 1) {
         newScale = 1;
       };
-      $container.css('transform', 'scale(' + newScale + ')');
+
+      setElementScaleLevel($container, newScale)
       event.preventDefault();
       $messenger.trigger('render');
     });
@@ -248,32 +304,16 @@ var makeZoomable = function($element, $container, $frame) {
       event.stopPropagation();
     };
 
-  var createWidgetsForNode = function(idx) {
-    $positionDotElement = $("<div>", {id: "position-dot-" + idx, class: "position-dot"});
-    $dimensionsWidgetElement = $("<div>", {id: "node-dimensions-" + idx, class: "node-dimensions"});
 
-    $dimensionsWidgetElement.html(' \
-              <div>width: <span class="width-value"></span>, scaled width:<span class="scaled-width-value"></span></div> \
-              <div>height: <span class="height-value"></span>, scaled height:<span class="scaled-height-value"></span></div> \
-              <div>center x: <span class="center-x-value"></span>, center y: <span class="center-y-value"></span></div> \
-              <div>left: <span class="left-value"></span>, top: <span class="top-value"></span></div> \
-              <a href="#" class="center-link">center</a> \
-    ');
+    $(".node-summary, .node-full").each(function(idx, el) {
+      var widgets = createWidgetsForNode(idx+2);
 
-    return {
-      dot: $positionDotElement,
-      dimensions: $dimensionsWidgetElement
-    }
-  };
+      $("#position-dots").append(widgets.dot);
+      $("#dimensions-widgets").append(widgets.dimensions);
 
-  $(".node-summary, .node-full").each(function(idx, el) {
-    var widgets = createWidgetsForNode(idx);
+      var node = new Node(el, widgets.dot, widgets.dimensions);
+    })
 
-    $("#position-dots").append(widgets.dot);
-    $("#dimensions-widgets").append(widgets.dimensions);
-
-    var node = new Node(el, widgets.dot, widgets.dimensions);
-  })
 
     // $element.click(doStuffWhenClicked);
   } ());
