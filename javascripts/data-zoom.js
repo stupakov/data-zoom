@@ -2,9 +2,10 @@ var makeZoomable = function($element, $container, $frame) {
 
   // TODO: consider storing a reference to the node's container in the node
 
-  (Node = function(el, $positionDot) {
+  (Node = function(el, $positionDot, $dimensionsWidget) {
     this.$el = $(el);
     this.$positionDot = $positionDot;
+    this.$dimensionsWidget = $dimensionsWidget;
     this.initialize();
   }).prototype = {
     initialize: function() {
@@ -53,18 +54,32 @@ var makeZoomable = function($element, $container, $frame) {
       };
     },
 
-    showDimensions: function() {
-      this.$el.find(".width-value").html(this.getWidth().toFixed(1));
-      this.$el.find(".height-value").html(this.getHeight().toFixed(1));
-      this.$el.find(".scaled-width-value").html(this.getScaledWidth().toFixed(1));
-      this.$el.find(".scaled-height-value").html(this.getScaledHeight().toFixed(1));
-      this.$el.find(".center-x-value").html(this.getCenter().x.toFixed(1));
-      this.$el.find(".center-y-value").html(this.getCenter().y.toFixed(1));
-      this.$el.find(".left-value").html(this.getOffset().left.toFixed(1));
-      this.$el.find(".top-value").html(this.getOffset().top.toFixed(1));
 
+    // TODO: move this into a dimensionsWidget object
+    showDimensions: function() {
+      if(undefined != this.$dimensionsWidget) {
+        this.$dimensionsWidget.css("left", this.getOffset().left);
+        this.$dimensionsWidget.css("top", this.getOffset().top);
+
+        this.$dimensionsWidget.find(".width-value").html(this.getWidth().toFixed(1));
+        this.$dimensionsWidget.find(".height-value").html(this.getHeight().toFixed(1));
+        this.$dimensionsWidget.find(".scaled-width-value").html(this.getScaledWidth().toFixed(1));
+        this.$dimensionsWidget.find(".scaled-height-value").html(this.getScaledHeight().toFixed(1));
+        this.$dimensionsWidget.find(".center-x-value").html(this.getCenter().x.toFixed(1));
+        this.$dimensionsWidget.find(".center-y-value").html(this.getCenter().y.toFixed(1));
+        this.$dimensionsWidget.find(".left-value").html(this.getOffset().left.toFixed(1));
+        this.$dimensionsWidget.find(".top-value").html(this.getOffset().top.toFixed(1));
+      }
       if(undefined != this.$positionDot) {
         placeDot(this.$positionDot, this.getCenter(), "red");
+      }
+
+      if(this.$el.is(":visible")) {
+        this.$positionDot.show();
+        this.$dimensionsWidget.show();
+      } else {
+        this.$positionDot.hide();
+        this.$dimensionsWidget.hide();
       }
     },
 
@@ -72,7 +87,6 @@ var makeZoomable = function($element, $container, $frame) {
       moveContainerToCenterElement(this.$el);
     }
   };
-
 
 
   var zoomScale = 2;
@@ -234,9 +248,31 @@ var makeZoomable = function($element, $container, $frame) {
       event.stopPropagation();
     };
 
+  var createWidgetsForNode = function(idx) {
+    $positionDotElement = $("<div>", {id: "position-dot-" + idx, class: "position-dot"});
+    $dimensionsWidgetElement = $("<div>", {id: "node-dimensions-" + idx, class: "node-dimensions"});
+
+    $dimensionsWidgetElement.html(' \
+              <div>width: <span class="width-value"></span>, scaled width:<span class="scaled-width-value"></span></div> \
+              <div>height: <span class="height-value"></span>, scaled height:<span class="scaled-height-value"></span></div> \
+              <div>center x: <span class="center-x-value"></span>, center y: <span class="center-y-value"></span></div> \
+              <div>left: <span class="left-value"></span>, top: <span class="top-value"></span></div> \
+              <a href="#" class="center-link">center</a> \
+    ');
+
+    return {
+      dot: $positionDotElement,
+      dimensions: $dimensionsWidgetElement
+    }
+  };
+
   $(".node-summary, .node-full").each(function(idx, el) {
-    var positionDotSelector = "#position-dot-" + idx;
-    var node = new Node(el, $(positionDotSelector));
+    var widgets = createWidgetsForNode(idx);
+
+    $("#position-dots").append(widgets.dot);
+    $("#dimensions-widgets").append(widgets.dimensions);
+
+    var node = new Node(el, widgets.dot, widgets.dimensions);
   })
 
     // $element.click(doStuffWhenClicked);
